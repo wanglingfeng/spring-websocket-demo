@@ -27,14 +27,9 @@ public class SpringWebsocketDemoApplication extends SpringBootServletInitializer
 	
 	@Override
 	public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-		registry.addHandler(systemWebSocketHandler(), "/message");
+		registry.addHandler(new MessageHandler(), "/message");
 	}
 	
-	@Bean
-	public WebSocketHandler systemWebSocketHandler() {
-		return new MessageHandler();
-	}
-
 	@Bean
 	public WebSocketContainerFactoryBean createWebSocketContainer() {
 		WebSocketContainerFactoryBean container = new WebSocketContainerFactoryBean();
