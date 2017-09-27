@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    <meta charset="UTF-8">
+    <title>Spring WebSocket Demo</title>
+    <script type="text/javascript">
+        //发送消息
+        function send() {
+            var nickname = document.getElementById('nickname').value;
+            
+            if (!nickname) {
+                alert("请输入昵称.");
+                return;
+            }
+            
+            window.location.href = "chat.html?nickname=" + nickname;
+        }
+    </script>
+</head>
+<body>
+    <h3>宇宙无敌聊天室</h3>
+    <label for="nickname">昵称:&nbsp;</label><input id="nickname" type="text"/><br/><br/>
+    <button onclick="send()">登录</button>
+    <br/>
+</body>
+</html>

@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    <meta charset="UTF-8">
+    <title>Spring WebSocket Demo</title>
+    <script type="text/javascript">
+        var webSocket = null;
+
+        // 判断当前浏览器是否支持webSocket
+        if ('WebSocket' in window) {
+            webSocket = new WebSocket("ws://localhost:8080/message");
+        } else {
+            alert('Not support webSocket.');
+        }
+
+        //连接成功建立的回调方法
+        webSocket.onopen = function(){
+            setMessageInnerHTML("欢迎进入聊天室.");
+        };
+
+        //连接关闭的回调方法
+        webSocket.onclose = function() {
+            setMessageInnerHTML("离线.");
+        };
+
+        //接收到消息的回调方法
+        webSocket.onmessage = function(event) {
+            setMessageInnerHTML(event.data);
+        };
+
+        //连接发生错误的回调方法
+        webSocket.onerror = function() {
+            setMessageInnerHTML("服务器异常.");
+        };
+        
+        window.onload = function() {
+            var key = 'nickname';
+            var reg = new RegExp('(^|&)' + key + '=([^&]*)(&|$)');
+            var r = window.location.search.substr(1).match(reg);
+            
+            if (!r) {
+                document.getElementById('nickname').innerHTML = '无名氏';
+            }
+            
+            document.getElementById('nickname').innerHTML = decodeURI(r[2]);
+        };
+
+        //监听窗口关闭事件，当窗口关闭时，主动去关闭websocket连接，防止连接还没断开就关闭窗口，server端会抛异常。
+        window.onbeforeunload = function() {
+            var nickname = document.getElementById('nickname').innerHTML;
+            webSocket.send(nickname + " 离开.");
+            webSocket.close();
+        };
+
+        window.onkeydown = function(e) {
+            if (!e) e = window.event;
+
+            // 监听Control+Enter组合键
+            if ((e.keyCode || e.which) == 13 && e.ctrlKey) {
+                send();
+            }
+        };
+
+        //将消息显示在网页上
+        function setMessageInnerHTML(innerHTML) {
+            var showDiv = document.getElementById('show');
+            showDiv.innerHTML += innerHTML + '<br/>';
+            showDiv.scrollTop = showDiv.scrollHeight; // 滚动条自动滚到最底部
+        }
+
+        //发送消息
+        function send() {
+            var nickname = document.getElementById('nickname').innerHTML;
+            var message = document.getElementById('message').value;
+
+            if (!nickname) {
+                alert("请输入昵称.");
+                return;
+            }
+            if (!message) {
+                alert("发送内容不能为空.");
+                return;
+            }
+
+            webSocket.send(nickname + ": " + message);
+
+            document.getElementById('message').value = "";
+        }
+    </script>
+</head>
+<body>
+<div id="show" style="border:solid 1px #000; overflow: scroll; width: 600px; height: 300px"></div>
+----------<br/>
+<!--float: left; 可以让label和div同行-->
+<label for="nickname" style="float: left;">昵称:&nbsp;</label><div id="nickname" style="float: left;"></div><br/><br/>
+<label><textarea id="message" rows="5" cols="80"></textarea></label>
+<button onclick="send()">发送(Control+Enter)</button>
+<br/>
+</body>
+</html>
