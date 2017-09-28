@@ -67,10 +67,12 @@ public class MessageHandler extends TextWebSocketHandler {
     
     private void sendToAll(TextMessage message) {
             sessions.forEach(s -> {
-                if (s.isOpen()) try {
-                    s.sendMessage(message);
-                } catch (IOException e) {
-                    e.printStackTrace();
+                if (s.isOpen()) {
+                    try {
+                        s.sendMessage(message);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
             });
     }
