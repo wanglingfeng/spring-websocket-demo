@@ -15,12 +15,19 @@
             
             window.location.href = "chat.html?nickname=" + nickname;
         }
+        
+        function viewStomp() {
+            window.location.href = 'ws';
+        }
     </script>
 </head>
 <body>
     <h3>宇宙无敌聊天室</h3>
     <label for="nickname">昵称:&nbsp;</label><input id="nickname" type="text"/><br/><br/>
-    <button onclick="send()">登录</button>
+    <button onclick="send();">登录</button>
     <br/>
+    --------------------------------------------------
+    <br/>
+    <button onclick="viewStomp();">查看Stomp</button>
 </body>
 </html>
